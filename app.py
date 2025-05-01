@@ -10,6 +10,7 @@ import sys
 import subprocess
 import time
 import socket
+from streamlit_drawable_canvas import st_canvas
 
 st.set_page_config(page_title="Text-to-Image Generator", layout="centered")
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'include'))
@@ -48,30 +49,167 @@ st.markdown('<h1 style="white-space: nowrap; text-align: center; margin: 0 auto;
 
 st.markdown("""
     <style>
-        .stTextInput label, .stTextArea label {
-            font-size: 20px !important;
-            font-weight: bold;
+        .stTextInput label, .stTextArea label, .stSelectbox label {
+            font-size: 22px !important;
+            font-weight: 700 !important;
         }
         .stTextArea textarea {
             font-size: 16px;
-            height: 80px !important;
+            height: 50px !important;
+        }
+        /* Additional margin for labels */
+        .stTextInput label, .stTextArea label, .stSelectbox label {
+            margin-bottom: 8px !important;
+            display: block !important;
+        }
+        /* Make select box text larger */
+        div.stSelectbox div[data-baseweb="select"] {
+            font-size: 18px !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Option Selector
-mode = st.radio("Select Mode", ["Text to Image", "Image to Image"])
+st.markdown("""
+    <style>
+    div[data-baseweb="radio"] > div {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        max-width: 600px !important;
+    }
+    div[data-baseweb="radio"] > div > label {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+        padding: 5px 10px !important;
+        flex: 1 !important;
+        text-align: center !important;
+    }
+    div[data-testid="stTextInput"] label,
+    div[data-testid="stTextArea"] label {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-prompt = st.text_input("Enter prompt:")
-context = st.text_area("Additional context (optional):")
+# Option Selector using columns and buttons
+st.markdown("### Select Mode")
 
-if mode == "Image to Image":
-    input_image = st.file_uploader("Upload input image (JPG,PNG,JPEG):", type=["jpg", "jpeg", "png"])
-    strength = st.slider("Strength (Image Influence)", min_value=0.1, max_value=1.0, value=0.75, step=0.05)
+# Create session state to store the selected mode if it doesn't exist
+if 'mode' not in st.session_state:
+    st.session_state.mode = "Text to Image"
+
+# Function to update the mode when a button is clicked
+def set_mode(selected_mode):
+    st.session_state.mode = selected_mode
+
+# Create three columns for the mode buttons
+col1, col2, col3 = st.columns(3)
+
+# Custom style for the selected and unselected buttons
+selected_style = """
+    background-color: #ff4b4b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    width: 100%;
+    font-weight: bold;
+"""
+
+unselected_style = """
+    background-color: #31333F;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 10px 20px;
+    width: 100%;
+    opacity: 0.85;
+"""
+
+# Add a button to each column
+with col1:
+    button1_style = selected_style if st.session_state.mode == "Text to Image" else unselected_style
+    if st.button("Text to Image", key="btn_text2img", use_container_width=True, 
+                 help="Generate images from text descriptions"):
+        set_mode("Text to Image")
+        st.rerun()
+
+with col2:
+    button2_style = selected_style if st.session_state.mode == "Image to Image" else unselected_style
+    if st.button("Image to Image", key="btn_img2img", use_container_width=True,
+                 help="Transform uploaded images using text prompts"):
+        set_mode("Image to Image")
+        st.rerun()
+
+with col3:
+    button3_style = selected_style if st.session_state.mode == "Freehand Drawing" else unselected_style
+    if st.button("Freehand Drawing", key="btn_drawing", use_container_width=True,
+                 help="Draw an image and transform it"):
+        set_mode("Freehand Drawing")
+        st.rerun()
+
+# Style the buttons based on selection state
+st.markdown(f"""
+    <style>
+        div[data-testid="stButton"] button[kind="secondary"][data-testid="baseButton-secondary"]:nth-of-type(1) {{
+            {button1_style}
+        }}
+        div[data-testid="stButton"] button[kind="secondary"][data-testid="baseButton-secondary"]:nth-of-type(2) {{
+            {button2_style}
+        }}
+        div[data-testid="stButton"] button[kind="secondary"][data-testid="baseButton-secondary"]:nth-of-type(3) {{
+            {button3_style}
+        }}
+    </style>
+""", unsafe_allow_html=True)
+
+# Get the selected mode from session state
+mode = st.session_state.mode
+
+if mode != "Freehand Drawing":
+    prompt = st.text_input("Enter Prompt:")
+else:
+    prompt = ""  # Prompt is not required for Freehand Drawing
+
+if mode != "Freehand Drawing":
+    style = st.selectbox("Choose Style", ["None", "Ghibli", "Cyberpunk", "Anime", "Realistic"])
+else:
+    style = "None"
+
+if style != "None":
+    prompt = f"{prompt}, in {style} style"
+
+if mode != "Freehand Drawing":
+    context = st.text_area("Additional Context (Optional):")
+else:
+    context = ""
+
+# Canvas only appears for Freehand Drawing
+if mode == "Freehand Drawing":
+    st.markdown("### Draw something below")
+    canvas_result = st_canvas(
+        fill_color="rgba(255, 165, 0, 0.3)",
+        stroke_width=4,
+        stroke_color="#000000",
+        background_color="#ffffff",
+        height=364,
+        width=768,
+        drawing_mode="freedraw",
+        key="canvas"
+    )
+    input_image = None
+    strength = None
+elif mode == "Image to Image":
+    input_image = st.file_uploader("Upload Input Image:", type=["jpg", "jpeg", "png"])
+    strength = st.slider("Strength of Image Influence)", min_value=0.1, max_value=1.0, value=0.75, step=0.05)
 else:
     input_image = None
     strength = None
 
+# Image Size section
 st.markdown("### Image Size")
 col1, col2 = st.columns(2)
 with col1:
@@ -79,11 +217,14 @@ with col1:
 with col2:
     height = st.slider("Height", min_value=256, max_value=1024, value=512, step=64)
 
+# Generate button
 if st.button("Generate Image"):
-    if not prompt.strip():
+    if mode != "Freehand Drawing" and not prompt.strip():
         st.warning("Please enter a prompt.")
     elif mode == "Image to Image" and input_image is None:
         st.warning("Please upload an input image.")
+    elif mode == "Freehand Drawing" and (canvas_result.image_data is None):
+        st.warning("Please draw something on the canvas.")
     else:
         with st.spinner("Generating image..."):
             try:
@@ -96,7 +237,7 @@ if st.button("Generate Image"):
                     )
                     response = stub.GenerateImage(request)
 
-                else:
+                elif mode == "Image to Image":
                     image_bytes = input_image.read()
                     image_b64 = base64.b64encode(image_bytes).decode('utf-8')
 
@@ -107,6 +248,24 @@ if st.button("Generate Image"):
                         width=width,
                         height=height,
                         strength=strength
+                    )
+                    response = stub.GenerateImageFromImage(request)
+
+                elif mode == "Freehand Drawing":
+                    # Convert NumPy canvas to PNG bytes
+                    image = Image.fromarray((canvas_result.image_data[:, :, :3]).astype('uint8'))
+                    buf = io.BytesIO()
+                    image.save(buf, format='PNG')
+                    image_bytes = buf.getvalue()
+                    image_b64 = base64.b64encode(image_bytes).decode('utf-8')
+
+                    request = text2image_pb2.Img2ImgRequest(
+                        prompt=prompt,
+                        context=context,
+                        input_image_base64=image_b64,
+                        width=width,
+                        height=height,
+                        strength=0.75  # Default for drawing
                     )
                     response = stub.GenerateImageFromImage(request)
 
