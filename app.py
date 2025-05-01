@@ -16,7 +16,7 @@ stub = text2image_pb2_grpc.Text2ImageStub(channel)
 
 # Streamlit UI
 st.set_page_config(page_title="Text-to-Image Generator", layout="centered")
-st.title("🖌️ Text-to-Image Generator (Stable Diffusion + gRPC)")
+st.title("Text2Image Generator (Realistic Vision v5.1 + gRPC)")
 
 prompt = st.text_input("Enter prompt:")
 context = st.text_area("Additional context (optional):")
