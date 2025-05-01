@@ -3,7 +3,12 @@
 import grpc
 import warnings
 
-import text2image_pb2 as text2image__pb2
+try:
+    # When imported from another module in the include directory
+    from . import text2image_pb2 as text2image__pb2
+except ImportError:
+    # When run directly
+    import text2image_pb2 as text2image__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__

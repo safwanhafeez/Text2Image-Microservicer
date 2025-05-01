@@ -1,0 +1,49 @@
+1. Portraits
+Prompt: "A hyper-realistic portrait of a young woman with blue eyes and long brown hair, wearing a white dress, soft natural lighting, with detailed skin textures, and a serene expression."
+
+Prompt: "A realistic close-up portrait of an elderly man with wrinkles, wearing a dark suit and glasses, with soft, diffused light coming from the left side, showing fine details in his skin and hair."
+
+2. Landscapes
+Prompt: "A breathtaking sunset over a calm ocean with waves gently lapping the shore, vibrant colors in the sky reflecting on the water, with a few clouds and a distant silhouette of a small island."
+
+Prompt: "A lush, green forest with dappled sunlight filtering through the trees, soft mist rising from the forest floor, and vibrant wildflowers dotting the scene."
+
+3. Architecture
+Prompt: "A photorealistic view of a modern cityscape at night, with tall glass buildings illuminated by streetlights, reflecting off wet pavement after a rainstorm, in a cyberpunk style."
+
+Prompt: "A cozy wooden cabin in a snow-covered landscape, with smoke rising from the chimney, surrounded by pine trees under a starry sky."
+
+4. Animals
+Prompt: "A realistic close-up of a tiger prowling through the jungle, with vibrant orange fur and piercing eyes, dappled sunlight filtering through the trees."
+
+Prompt: "A photorealistic image of a golden retriever puppy playing in a meadow, surrounded by wildflowers and soft sunlight."
+
+5. Still Life
+Prompt: "A hyper-realistic still life of a polished wooden table with a bouquet of roses, a glass vase filled with water, and delicate raindrops on the window in the background."
+
+Prompt: "A close-up of an antique pocket watch resting on an old leather-bound book, with soft lighting casting subtle shadows on the textured surface."
+
+6. Fantasy/Surrealism
+Prompt: "A surreal scene of a floating castle surrounded by clouds, with a glowing golden bridge leading to the castle, set against a vibrant sunset sky, in ultra-high detail."
+
+Prompt: "A magical forest at twilight, with glowing fireflies, enchanted mushrooms, and a large crystal pond reflecting the starry sky above."
+
+7. Fashion
+Prompt: "A realistic fashion portrait of a model wearing a sleek, black leather jacket and sunglasses, with a city skyline background, soft lighting, and a confident expression."
+
+Prompt: "A fashion photo shoot of a woman in a flowing red gown standing on a grand staircase, with a dramatic, cinematic atmosphere and soft lighting."
+
+8. Cars and Vehicles
+Prompt: "A close-up of a red sports car parked on a deserted road at sunset, with reflections of the landscape on the car's shiny surface."
+
+Prompt: "A photorealistic image of a vintage motorcycle on a dirt road surrounded by mountains, with the sun setting in the background, casting warm golden light."
+
+9. Food
+Prompt: "A hyper-realistic image of a freshly baked pizza with melted cheese, pepperoni, and fresh basil leaves, placed on a wooden table with soft natural lighting."
+
+Prompt: "A close-up of a gourmet burger with layers of lettuce, cheese, and a juicy patty, with crispy fries on the side, set against a rustic wooden background."
+
+10. Sci-Fi
+Prompt: "A futuristic city with flying cars, neon lights, and towering skyscrapers, set in the distant future, with a dark and moody atmosphere, detailed textures on every surface."
+
+Prompt: "A sleek astronaut floating in space, with Earth visible in the background, and the reflection of the spacesuit in the helmet, illuminated by distant stars."

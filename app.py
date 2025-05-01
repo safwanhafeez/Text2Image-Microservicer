@@ -1,11 +1,15 @@
 import streamlit as st
 import grpc
 import base64
-from proto import text2image_pb2
-from proto import text2image_pb2_grpc
+from include import text2image_pb2
+from include import text2image_pb2_grpc
 from PIL import Image
 import io
+import os
+import sys
     
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'include'))
+
 # Set up gRPC client
 channel = grpc.insecure_channel('localhost:50051')
 stub = text2image_pb2_grpc.Text2ImageStub(channel)
@@ -29,7 +33,7 @@ if st.button("Generate Image"):
                 # Convert base64 back to image
                 image_data = base64.b64decode(response.image_base64)
                 image = Image.open(io.BytesIO(image_data))
-                st.image(image, caption="Generated Image", use_column_width=True)
+                st.image(image, caption="Generated Image", use_container_width=True)
 
                 # Download button
                 st.download_button(

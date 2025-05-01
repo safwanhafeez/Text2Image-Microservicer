@@ -6,6 +6,11 @@ import torch
 from PIL import Image
 from diffusers import StableDiffusionPipeline
 import datetime
+import os
+import sys
+
+# Add the current directory to the path to ensure imports work
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import text2image_pb2
 import text2image_pb2_grpc
@@ -28,9 +33,17 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
             print(f"Generating image for prompt: {full_prompt}")
             image = pipe(full_prompt).images[0]
 
+            # Create images directory if it doesn't exist
+            # Get the path relative to the script location
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            images_dir = os.path.join(script_dir, "..", "images")
+            
+            # Create the directory if it doesn't exist
+            os.makedirs(images_dir, exist_ok=True)
+            
             # Save image locally with timestamp
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"images/generated_image_{timestamp}.png"
+            filename = os.path.join(images_dir, f"generated_image_{timestamp}.png")
             image.save(filename)
             print(f"Image saved locally as: {filename}")
 
