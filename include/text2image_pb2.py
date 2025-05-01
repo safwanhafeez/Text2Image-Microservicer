@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10text2image.proto\".\n\x0bTextRequest\x12\x0e\n\x06prompt\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontext\x18\x02 \x01(\t\"5\n\rImageResponse\x12\x14\n\x0cimage_base64\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t2;\n\nText2Image\x12-\n\rGenerateImage\x12\x0c.TextRequest\x1a\x0e.ImageResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10text2image.proto\"M\n\x0bTextRequest\x12\x0e\n\x06prompt\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontext\x18\x02 \x01(\t\x12\x0e\n\x06height\x18\x03 \x01(\x05\x12\r\n\x05width\x18\x04 \x01(\x05\"5\n\rImageResponse\x12\x14\n\x0cimage_base64\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t2;\n\nText2Image\x12-\n\rGenerateImage\x12\x0c.TextRequest\x1a\x0e.ImageResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,9 +32,9 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'text2image_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_TEXTREQUEST']._serialized_start=20
-  _globals['_TEXTREQUEST']._serialized_end=66
-  _globals['_IMAGERESPONSE']._serialized_start=68
-  _globals['_IMAGERESPONSE']._serialized_end=121
-  _globals['_TEXT2IMAGE']._serialized_start=123
-  _globals['_TEXT2IMAGE']._serialized_end=182
+  _globals['_TEXTREQUEST']._serialized_end=97
+  _globals['_IMAGERESPONSE']._serialized_start=99
+  _globals['_IMAGERESPONSE']._serialized_end=152
+  _globals['_TEXT2IMAGE']._serialized_start=154
+  _globals['_TEXT2IMAGE']._serialized_end=213
 # @@protoc_insertion_point(module_scope)

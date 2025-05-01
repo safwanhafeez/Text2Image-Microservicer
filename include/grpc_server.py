@@ -27,11 +27,17 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
     def GenerateImage(self, request, context):
         prompt = request.prompt
         ctx = request.context
+        height = request.height or 512  # default if 0
+        width = request.width or 512
+
         full_prompt = f"{prompt}. Context: {ctx}" if ctx else prompt
 
         try:
             print(f"Generating image for prompt: {full_prompt}")
-            image = pipe(full_prompt).images[0]
+            image = pipe(full_prompt, height=height, width=width).images[0]
+
+            # Resize image to requested dimensions
+            image = image.resize((width, height), Image.ANTIALIAS)
 
             # Create images directory if it doesn't exist
             # Get the path relative to the script location
