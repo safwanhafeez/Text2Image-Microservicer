@@ -2,13 +2,23 @@ syntax = "proto3";
 
 service Text2Image {
   rpc GenerateImage (TextRequest) returns (ImageResponse);
+  rpc GenerateImageFromImage (Img2ImgRequest) returns (ImageResponse);
 }
 
 message TextRequest {
   string prompt = 1;
   string context = 2;
-  int32 height = 3;
-  int32 width = 4;
+  int32 width = 3;
+  int32 height = 4;
+}
+
+message Img2ImgRequest {
+  string prompt = 1;
+  string context = 2;
+  int32 width = 3;
+  int32 height = 4;
+  string input_image_base64 = 5;
+  float strength = 6;
 }
 
 message ImageResponse {
