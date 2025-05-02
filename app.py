@@ -180,12 +180,7 @@ else:
     style = "None"
 
 if style != "None":
-    prompt = f"{prompt}, in {style} style"
-
-if mode != "Freehand Drawing":
-    context = st.text_area("Additional Context (Optional):")
-else:
-    context = ""
+    prompt = f"{prompt or ''}, in {style} style"
 
 # Canvas only appears for Freehand Drawing
 if mode == "Freehand Drawing":
@@ -231,7 +226,6 @@ if st.button("Generate Image"):
                 if mode == "Text to Image":
                     request = text2image_pb2.TextRequest(
                         prompt=prompt,
-                        context=context,
                         width=width,
                         height=height
                     )
@@ -243,7 +237,6 @@ if st.button("Generate Image"):
 
                     request = text2image_pb2.Img2ImgRequest(
                         prompt=prompt,
-                        context=context,
                         input_image_base64=image_b64,
                         width=width,
                         height=height,
@@ -261,7 +254,6 @@ if st.button("Generate Image"):
 
                     request = text2image_pb2.Img2ImgRequest(
                         prompt=prompt,
-                        context=context,
                         input_image_base64=image_b64,
                         width=width,
                         height=height,

@@ -4,7 +4,7 @@ import base64
 import io
 import torch
 from PIL import Image
-from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
+from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
 import datetime
 import os
 import sys
@@ -15,20 +15,24 @@ import text2image_pb2_grpc
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Set model ID
-MODEL_ID = "SG161222/Realistic_Vision_V5.1_noVAE"
+MODEL_ID = "stabilityai/stable-diffusion-xl-base-1.0"
 
 # Use float16 to reduce VRAM usage
-TORCH_DTYPE = torch.float32
+TORCH_DTYPE = torch.float16
 
 # Load the base pipeline (text-to-image) once at start
 print("Loading text-to-image pipeline...")
-pipe = StableDiffusionPipeline.from_pretrained(
+
+pipe = StableDiffusionXLPipeline.from_pretrained(
     MODEL_ID,
     torch_dtype=TORCH_DTYPE,
-    use_safetensors=True
+    variant="fp16",
+    use_safetensors=True,
 ).to("cuda")
+
 pipe.enable_attention_slicing()
-pipe.safety_checker = None  # Optional: skip safety checker to save memory
+pipe.enable_vae_slicing()
+pipe.safety_checker = None
 
 # gRPC Service Implementation
 class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
@@ -56,7 +60,7 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
             # Convert base pipeline to img2img pipeline on demand
             print("[Img2Img] Converting base pipeline to img2img...")
             torch.cuda.empty_cache()
-            img2img_pipe = StableDiffusionImg2ImgPipeline(**pipe.components).to("cuda")
+            img2img_pipe = StableDiffusionXLImg2ImgPipeline(**pipe.components).to("cuda")
             img2img_pipe.to(torch_dtype=TORCH_DTYPE)
             img2img_pipe.enable_attention_slicing()
             img2img_pipe.safety_checker = None
@@ -64,12 +68,20 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
             full_prompt = request.prompt
             strength = request.strength or 0.75  # Default strength
 
+            print(f"[Img2Img] Prompt: {full_prompt}")
+            print("Calling img2img pipeline with:", {
+                "strength": strength,
+                "guidance_scale": strength
+            })
+
             print(f"[Img2Img] Prompt: {full_prompt} | Strength: {strength}")
             image = img2img_pipe(prompt=full_prompt, image=init_image, strength=strength).images[0]
 
             return self._prepare_response(image, request.width, request.height)
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             print(f"Error in img2img: {e}")
             return text2image_pb2.ImageResponse(image_base64="", status=f"error: {str(e)}")
 
