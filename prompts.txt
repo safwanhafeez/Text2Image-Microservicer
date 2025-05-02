@@ -33,7 +33,7 @@ Prompt: "A realistic fashion portrait of a model wearing a sleek, black leather 
 
 Prompt: "A fashion photo shoot of a woman in a flowing red gown standing on a grand staircase, with a dramatic, cinematic atmosphere and soft lighting."
 
-8. Cars and Vehicles
+8. Cars and Vehicle
 Prompt: "A close-up of a red sports car parked on a deserted road at sunset, with reflections of the landscape on the car's shiny surface."
 
 Prompt: "A photorealistic image of a vintage motorcycle on a dirt road surrounded by mountains, with the sun setting in the background, casting warm golden light."
