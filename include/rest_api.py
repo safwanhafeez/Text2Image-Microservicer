@@ -13,9 +13,8 @@ stub = text2image_pb2_grpc.Text2ImageStub(channel)
 def generate_image():
     data = request.get_json()
     prompt = data.get('prompt', '')
-    context = data.get('context', '')
 
-    grpc_request = text2image_pb2.TextRequest(prompt=prompt, context=context)
+    grpc_request = text2image_pb2.TextRequest(prompt=prompt)
     grpc_response = stub.GenerateImage(grpc_request)
 
     return jsonify({

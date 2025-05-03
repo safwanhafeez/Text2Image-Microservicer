@@ -18,7 +18,12 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 MODEL_ID = "SG161222/Realistic_Vision_V5.1_noVAE"
 
 # Use float16 to reduce VRAM usage
-TORCH_DTYPE = torch.float32
+TORCH_DTYPE = torch.float16
+
+# Define negative prompt
+negative_prompt = (
+    "blurry, low quality, poorly drawn hands, text, watermark, distorted face, bad anatomy, low resolution"
+)
 
 # Load the base pipeline (text-to-image) once at start
 print("Loading text-to-image pipeline...")
@@ -39,7 +44,13 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
 
         try:
             print(f"[Text2Image] Prompt: {prompt}")
-            image = pipe(prompt, height=height, width=width).images[0]
+            image = pipe(
+                prompt, 
+                height=height, 
+                width=width,
+                negative_prompt=negative_prompt,
+                guidance_scale=7.5
+            ).images[0]
 
             return self._prepare_response(image, width, height)
 
@@ -65,7 +76,12 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
             strength = request.strength or 0.75  # Default strength
 
             print(f"[Img2Img] Prompt: {full_prompt} | Strength: {strength}")
-            image = img2img_pipe(prompt=full_prompt, image=init_image, strength=strength).images[0]
+            image = img2img_pipe(
+                prompt=full_prompt, 
+                image=init_image, 
+                strength=strength,
+                negative_prompt=negative_prompt
+            ).images[0]
 
             return self._prepare_response(image, request.width, request.height)
 
