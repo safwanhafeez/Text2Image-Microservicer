@@ -169,10 +169,7 @@ st.markdown(f"""
 # Get the selected mode from session state
 mode = st.session_state.mode
 
-if mode != "Freehand Drawing":
-    prompt = st.text_input("Enter Prompt:")
-else:
-    prompt = ""  # Prompt is not required for Freehand Drawing
+prompt = st.text_input("Enter Prompt:")
 
 if mode != "Freehand Drawing":
     style = st.selectbox("Choose Style", ["None", "Ghibli", "Cyberpunk", "Anime", "Realistic"])

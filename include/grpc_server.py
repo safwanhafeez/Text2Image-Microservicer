@@ -25,16 +25,16 @@ negative_prompt = (
     "blurry, low quality, poorly drawn hands, text, watermark, distorted face, bad anatomy, low resolution"
 )
 
-# print("Loading VAE...")
-# vae = AutoencoderKL.from_pretrained(
-#     "stabilityai/sd-vae-ft-mse",
-#     torch_dtype=TORCH_DTYPE
-# ).to("cuda")
+print("Loading VAE...")
+vae = AutoencoderKL.from_pretrained(
+    "stabilityai/sd-vae-ft-mse",
+    torch_dtype=TORCH_DTYPE
+).to("cuda")
 
 print("Loading text-to-image pipeline...")
 pipe = StableDiffusionPipeline.from_pretrained(
     MODEL_ID,
-    # vae=vae,
+    vae=vae,
     torch_dtype=TORCH_DTYPE,
     use_safetensors=True
 ).to("cuda")
