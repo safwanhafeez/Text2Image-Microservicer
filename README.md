@@ -1,108 +1,144 @@
 # Text to Image Generator
 
-A Streamlit application with gRPC backend that generates images from text prompts using Stable Diffusion.
+A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Stable Diffusion** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
 
-## Features
+---
 
-- Text to Image generation
-- Image to Image transformation
-- Freehand drawing with transformation
-- Multiple styles options
+## Setup
 
-## Project Structure
+### Prerequisites
+
+For **local development**:
+- Python 3.9+
+- PyTorch with CUDA support
+- NVIDIA GPU (minimum 6GB VRAM)
+
+For **Docker deployment**:
+- Docker & Docker Compose
+- NVIDIA Container Toolkit (for GPU passthrough)
+
+### Local Setup (Manual)
+
+```bash
+# Clone the repository
+git clone https://github.com/your/repo.git
+cd your-repo
+
+# Create virtual environment and activate it
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the gRPC server
+python include/grpc_server.py
+
+# In a new terminal, launch the Streamlit frontend
+streamlit run app.py
+```
+
+Access the app at: [http://localhost:8501](http://localhost:8501)
+
+### Docker Setup (Recommended)
+
+```bash
+# Install NVIDIA Container Toolkit if not already installed
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+
+# Clone and run the application
+git clone https://github.com/your/repo.git
+cd your-repo
+docker-compose up -d
+```
+
+---
+
+## Usage
+
+1. Enter a text prompt or draw a sketch.
+2. Choose a style (realistic, anime, digital art, etc.).
+3. Click **Generate**.
+4. View, download, or iterate on generated images.
+
+All images are stored in the `images/` directory.
+
+---
+
+##  Architecture
 
 ```
 .
 ├── app.py                # Streamlit frontend
 ├── Dockerfile            # Docker image definition
-├── docker-compose.yml    # Multi-container orchestration
-├── images/               # Generated images storage
-├── include/              # Backend code and protobuf definitions
-│   ├── grpc_server.py    # gRPC server implementation
-│   ├── text2image_pb2.py # Generated protobuf code
-│   └── text2image.proto  # Protobuf definitions
-├── README.md             # This file
-└── requirements.txt      # Python dependencies
+├── docker-compose.yml    # Service orchestration
+├── images/               # Output storage
+├── include/
+│   ├── grpc_server.py    # Backend with Stable Diffusion inference
+│   ├── text2image_pb2.py # Protobuf-generated classes
+│   └── text2image.proto  # gRPC definitions
+├── requirements.txt      # Dependencies
+└── README.md             # Project documentation
 ```
 
-## Prerequisites
+### System Flow
 
-For local development:
-- Python 3.9+
-- PyTorch with CUDA support
-- NVIDIA GPU with CUDA support
+1. **Frontend (Streamlit)** collects user input.
+2. **gRPC Client** sends requests to the backend.
+3. **Backend (Python server)** uses Stable Diffusion to generate images.
+4. The response is returned to the frontend for display.
 
-For Docker deployment:
-- Docker and Docker Compose
-- NVIDIA Container Toolkit (for GPU support)
+---
 
-## Deployment with Docker
+## Model Sources
 
-1. Make sure you have Docker and Docker Compose installed.
+This application uses:
+- **Stable Diffusion v1.5** (by CompVis and Stability AI)
+- Available via [Hugging Face](https://huggingface.co/CompVis/stable-diffusion-v1-5)
 
-2. Ensure NVIDIA Container Toolkit is installed for GPU support:
-   ```bash
-   # Install NVIDIA Container Toolkit
-   distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-   sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-   sudo systemctl restart docker
-   ```
+To use a different model, you can modify the inference logic in `grpc_server.py`.
 
-3. Clone this repository and navigate to the project directory.
+---
 
-4. Build and start the Docker containers:
-   ```bash
-   docker-compose up -d
-   ```
+## Limitations
 
-5. Access the Streamlit application at http://localhost:8501
+- Requires a **GPU with at least 6GB VRAM** for smooth operation.
+- Performance may vary depending on:
+  - Prompt complexity
+  - Image resolution
+  - GPU power
+- Generated content may occasionally be inconsistent or abstract.
+- No safety filtering on prompts; inappropriate prompts may produce NSFW results unless explicitly restricted.
 
-## Manual Deployment
-
-1. Clone the repository and navigate to the project directory.
-
-2. Create a virtual environment and install dependencies:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Start the gRPC server:
-   ```bash
-   python include/grpc_server.py
-   ```
-
-4. In a separate terminal, start the Streamlit app:
-   ```bash
-   streamlit run app.py
-   ```
-
-5. Access the Streamlit application at http://localhost:8501
+---
 
 ## Configuration
 
-You can modify the following environment variables in the `docker-compose.yml`:
+You can adjust the following in `docker-compose.yml`:
 
-- `CUDA_VISIBLE_DEVICES`: Specify which GPU to use
-- `GRPC_SERVER_ADDRESS`: Address of the gRPC server (default: grpc-server)
+```yaml
+environment:
+  - CUDA_VISIBLE_DEVICES=0
+  - GRPC_SERVER_ADDRESS=grpc-server
+```
+
+---
 
 ## Troubleshooting
 
-### Connection Issues
-If the Streamlit app can't connect to the gRPC server, check:
-1. The gRPC server is running
-2. Ports are not blocked by firewall
-3. In Docker, the service names match what's in the docker-compose.yml
+### gRPC Not Connecting
+- Ensure `grpc_server.py` is running.
+- Check if `GRPC_SERVER_ADDRESS` matches between frontend and backend.
+- Confirm Docker network services are reachable by name.
 
-### GPU Issues
-If you encounter GPU memory errors:
-1. Reduce the image dimensions
-2. Use a smaller model
-3. Ensure your GPU has enough VRAM for Stable Diffusion (minimum 6GB)
+### GPU Errors
+- Reduce image size
+- Use lighter models
+- Verify CUDA and NVIDIA drivers
 
-## License
+---
 
-[MIT License](LICENSE)
