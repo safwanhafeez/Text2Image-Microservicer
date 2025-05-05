@@ -5,9 +5,8 @@ A **Streamlit-based frontend** paired with a **gRPC backend** for generating ima
 ## Setup
 ### Prerequisites
 For **local development**:
-- Python 3.9+
-- PyTorch with CUDA support
-- NVIDIA GPU (minimum 6GB VRAM)
+- Python 3.9+ with CUDA support
+- NVIDIA GPU (minimum 8GB VRAM)
 For **Docker deployment**:
 - Docker & Docker Compose
 - NVIDIA Container Toolkit (for GPU passthrough)
@@ -107,7 +106,7 @@ To use a different model, you can modify the inference logic in `grpc_server.py`
 
 
 ## Limitations
-- Requires a **GPU with at least 6GB VRAM** for smooth operation.
+- Requires a **GPU with at least 8GB VRAM** for smooth operation.
 - Performance may vary depending on:
   - Prompt complexity
   - Image resolution
