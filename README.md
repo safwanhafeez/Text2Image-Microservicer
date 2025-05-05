@@ -85,6 +85,13 @@ This application uses:
   
 To use a different model, you can modify the inference logic in `grpc_server.py`.
 ---
+
+## Graphs
+![Text to Image Generator Interface](image1.jpeg)
+
+![Text to Image Generator Interface](image2.jpeg)
+
+
 ## Limitations
 - Requires a **GPU with at least 6GB VRAM** for smooth operation.
 - Performance may vary depending on:
