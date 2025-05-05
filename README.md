@@ -86,9 +86,9 @@ To use a different model, you can modify the inference logic in `grpc_server.py`
 ---
 
 ## Graphs
-![Text to Image Generator Interface](image1.jpeg)
+![Text to Image Generator Interface](data/image1.jpeg)
 
-![Text to Image Generator Interface](image2.jpeg)
+![Text to Image Generator Interface](data/image2.jpeg)
 
 
 ## Limitations
