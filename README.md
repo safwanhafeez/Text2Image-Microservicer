@@ -83,6 +83,11 @@ This application uses:
   
 To use a different model, you can modify the inference logic in `grpc_server.py`.
 ---
+
+## Graphs
+![Text to Image Generator Interface](https://raw.githubusercontent.com/your-username/your-repo/main/assets/interface_preview.png)
+
+
 ## Limitations
 - Requires a **GPU with at least 6GB VRAM** for smooth operation.
 - Performance may vary depending on:
