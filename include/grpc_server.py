@@ -51,7 +51,7 @@ pipe = StableDiffusionPipeline.from_pretrained(
     use_safetensors=True
 ).to("cuda")
 pipe.enable_attention_slicing()
-pipe.safety_checker = None  # Optional: skip safety checker to save memory
+pipe.safety_checker = None
 
 # gRPC Service Implementation
 class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
