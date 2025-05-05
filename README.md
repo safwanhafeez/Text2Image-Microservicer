@@ -16,6 +16,7 @@ For **Docker deployment**:
 ```bash
 # Install grpcio and grpcio-tools
 pip install grpcio grpcio-tools
+
 # Compile the protobuf definitions (if not already compiled)
 python -m grpc_tools.protoc -I=include --python_out=include --grpc_python_out=include include/text2image.proto
 ```
@@ -23,13 +24,19 @@ python -m grpc_tools.protoc -I=include --python_out=include --grpc_python_out=in
 # Clone the repository
 git clone https://github.com/your/repo.git
 cd your-repo
+
 # Create virtual environment and activate it
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+
+# Windows: venv\Scripts\activate
+source venv/bin/activate 
+
 # Install dependencies
 pip install -r requirements.txt
+
 # Start the gRPC server
 python include/grpc_server.py
+
 # In a new terminal, launch the Streamlit frontend
 streamlit run app.py
 ```
@@ -38,14 +45,22 @@ Access the app at: [http://localhost:8501](http://localhost:8501)
 ```bash
 # Install NVIDIA Container Toolkit if not already installed
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/
+
+nvidia-docker.list
+
 sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
+
 # Clone and run the application
 git clone https://github.com/your/repo.git
+
 cd your-repo
 docker-compose up -d
+
 docker build -t text2image # Build command
 docker run -p 8501:8501 -p 50051:50051 myapp # Run docker
 ```
