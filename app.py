@@ -51,6 +51,7 @@ st.markdown("""
     <style>
         .stTextInput label, .stTextArea label, .stSelectbox label {
             font-size: 22px !important;
+            
             font-weight: 700 !important;
         }
         .stTextArea textarea {
