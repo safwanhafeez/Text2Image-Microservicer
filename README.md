@@ -1,5 +1,5 @@
 # Text to Image Generator
-A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Realistic Vision** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
+A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Realistic Vision v 5.1 (SDXL Base Model)** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
 
 ---
 ## Setup
@@ -93,10 +93,11 @@ All images are stored in the `images/` directory.
 ---
 ## Model Sources
 This application uses:
-- **Realistic Vision** model for high-fidelity image generation
+- **Realistic Vision v5.1 (SDXL Base Model)** model for high-fidelity image generation
 - Available on [Hugging Face](https://huggingface.co/SG161222/Realistic_Vision_V5.1)
   
 To use a different model, you can modify the inference logic in `grpc_server.py`.
+
 ---
 
 ## Graphs
