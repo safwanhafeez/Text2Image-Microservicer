@@ -19,6 +19,16 @@ For **Docker deployment**:
 
 ### Local Setup (Manual)
 
+#### Install gRPC Tools
+
+```bash
+# Install grpcio and grpcio-tools
+pip install grpcio grpcio-tools
+
+# Compile the protobuf definitions (if not already compiled)
+python -m grpc_tools.protoc -I=include --python_out=include --grpc_python_out=include include/text2image.proto
+```
+
 ```bash
 # Clone the repository
 git clone https://github.com/your/repo.git
@@ -69,7 +79,7 @@ All images are stored in the `images/` directory.
 
 ---
 
-##  Architecture
+## Architecture
 
 ```
 .
@@ -141,4 +151,5 @@ environment:
 - Verify CUDA and NVIDIA drivers
 
 ---
+
 
