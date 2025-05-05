@@ -85,7 +85,7 @@ To use a different model, you can modify the inference logic in `grpc_server.py`
 ---
 
 ## Graphs
-![Text to Image Generator Interface](https://raw.githubusercontent.com/your-username/your-repo/main/assets/interface_preview.png)
+![Text to Image Generator Interface](image1.jpeg)
 
 
 ## Limitations
