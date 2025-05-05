@@ -1,6 +1,6 @@
 # Text to Image Generator
 
-A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Stable Diffusion** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
+A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Realistic Vision** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
 
 ---
 
@@ -88,7 +88,7 @@ All images are stored in the `images/` directory.
 ├── docker-compose.yml    # Service orchestration
 ├── images/               # Output storage
 ├── include/
-│   ├── grpc_server.py    # Backend with Stable Diffusion inference
+│   ├── grpc_server.py    # Backend with Realistic vision inference
 │   ├── text2image_pb2.py # Protobuf-generated classes
 │   └── text2image.proto  # gRPC definitions
 ├── requirements.txt      # Dependencies
@@ -99,7 +99,7 @@ All images are stored in the `images/` directory.
 
 1. **Frontend (Streamlit)** collects user input.
 2. **gRPC Client** sends requests to the backend.
-3. **Backend (Python server)** uses Stable Diffusion to generate images.
+3. **Backend (Python server)** uses Realistic vision to generate images.
 4. The response is returned to the frontend for display.
 
 ---
@@ -107,9 +107,9 @@ All images are stored in the `images/` directory.
 ## Model Sources
 
 This application uses:
-- **Stable Diffusion v1.5** (by CompVis and Stability AI)
-- Available via [Hugging Face](https://huggingface.co/CompVis/stable-diffusion-v1-5)
-
+- **Realistic Vision** model for high-fidelity image generation
+- Available on [Hugging Face](https://huggingface.co/SG161222/Realistic_Vision_V5.1)
+  
 To use a different model, you can modify the inference logic in `grpc_server.py`.
 
 ---
