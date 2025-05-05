@@ -173,7 +173,20 @@ mode = st.session_state.mode
 prompt = st.text_input("Enter Prompt:")
 
 if mode != "Freehand Drawing":
-    style = st.selectbox("Choose Style", ["None", "Ghibli", "Cyberpunk", "Anime", "Realistic"])
+    style = st.selectbox(
+        "Choose Style",
+        [
+            "None",
+            "Vintage",
+            "Anime",
+            "Realistic",
+            "Cyberpunk",
+            "Fantasy",
+            "Ghibli",
+            "Steampunk",
+            "Minimalist"
+        ]
+    )
 else:
     style = "None"
 
