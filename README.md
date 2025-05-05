@@ -50,7 +50,7 @@ streamlit run app.py
 
 Access the app at: [http://localhost:8501](http://localhost:8501)
 
-### Docker Setup (Recommended)
+### Docker Setup
 
 ```bash
 # Install NVIDIA Container Toolkit if not already installed
