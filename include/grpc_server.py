@@ -10,6 +10,8 @@ import os
 import sys
 import text2image_pb2
 import text2image_pb2_grpc
+import csv
+from time import time
 
 # Add the current directory to sys.path to ensure imports work
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +26,16 @@ TORCH_DTYPE = torch.float16
 negative_prompt = (
     "blurry, low quality, poorly drawn hands, text, watermark, distorted face, bad anatomy, low resolution"
 )
+
+# Path to performance CSV
+PERF_CSV_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "performance.csv")
+os.makedirs(os.path.dirname(PERF_CSV_PATH), exist_ok=True)
+
+# Initialize CSV with headers if it doesn't exist
+if not os.path.exists(PERF_CSV_PATH):
+    with open(PERF_CSV_PATH, mode='w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(["image_id", "width", "height", "time_taken_seconds", "saved_path"])
 
 print("Loading VAE...")
 vae = AutoencoderKL.from_pretrained(
@@ -50,6 +62,7 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
 
         try:
             print(f"[Text2Image] Prompt: {prompt}")
+            start_time = time()
             image = pipe(
                 prompt, 
                 height=height, 
@@ -58,7 +71,7 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
                 guidance_scale=7.5
             ).images[0]
 
-            return self._prepare_response(image, width, height)
+            return self._prepare_response(image, width, height, start_time)
 
         except Exception as e:
             print(f"Error in text-to-image: {e}")
@@ -66,11 +79,9 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
 
     def GenerateImageFromImage(self, request, context):
         try:
-            # Decode input image
             init_image = Image.open(io.BytesIO(base64.b64decode(request.input_image_base64))).convert("RGB")
             init_image = init_image.resize((request.width, request.height))
 
-            # Convert base pipeline to img2img pipeline on demand
             print("[Img2Img] Converting base pipeline to img2img...")
             torch.cuda.empty_cache()
             img2img_pipe = StableDiffusionImg2ImgPipeline(**pipe.components).to("cuda")
@@ -79,9 +90,10 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
             img2img_pipe.safety_checker = None
 
             full_prompt = request.prompt
-            strength = request.strength or 0.75  # Default strength
+            strength = request.strength or 0.75
 
             print(f"[Img2Img] Prompt: {full_prompt} | Strength: {strength}")
+            start_time = time()
             image = img2img_pipe(
                 prompt=full_prompt, 
                 image=init_image, 
@@ -89,21 +101,22 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
                 negative_prompt=negative_prompt
             ).images[0]
 
-            return self._prepare_response(image, request.width, request.height)
+            return self._prepare_response(image, request.width, request.height, start_time)
 
         except Exception as e:
             print(f"Error in img2img: {e}")
             return text2image_pb2.ImageResponse(image_base64="", status=f"error: {str(e)}")
 
-    def _prepare_response(self, image, width, height):
+    def _prepare_response(self, image, width, height, start_time):
         # Resize to ensure output matches requested size
         image = image.resize((width, height), Image.LANCZOS)
 
         # Save image
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        image_id = f"generated_{timestamp}"
         save_dir = os.path.join(os.path.dirname(__file__), "..", "images")
         os.makedirs(save_dir, exist_ok=True)
-        filename = os.path.join(save_dir, f"generated_{timestamp}.png")
+        filename = os.path.join(save_dir, f"{image_id}.png")
         image.save(filename)
         print(f"Image saved: {filename}")
 
@@ -112,7 +125,16 @@ class Text2ImageServicer(text2image_pb2_grpc.Text2ImageServicer):
         image.save(buffer, format="PNG")
         image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
 
+        # Log performance
+        time_taken = time() - start_time
+        self._log_performance(image_id, width, height, time_taken, filename)
+
         return text2image_pb2.ImageResponse(image_base64=image_base64, status="success")
+
+    def _log_performance(self, image_id, width, height, time_taken, saved_path):
+        with open(PERF_CSV_PATH, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([image_id, width, height, f"{time_taken:.4f}", saved_path])
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
