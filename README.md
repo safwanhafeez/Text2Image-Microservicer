@@ -7,7 +7,7 @@ A Streamlit application with gRPC backend that generates images from text prompt
 - Text to Image generation
 - Image to Image transformation
 - Freehand drawing with transformation
-- Multiple style options
+- Multiple styles options
 
 ## Project Structure
 
