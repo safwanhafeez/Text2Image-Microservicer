@@ -1,5 +1,4 @@
 # Text to Image Generator
-
 A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Realistic Vision** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
 
 ---
