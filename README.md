@@ -1,4 +1,4 @@
-# Text to Image Generator
+ # Text to Image Generator
 A **Streamlit-based frontend** paired with a **gRPC backend** for generating images using **Realistic Vision** models. This tool supports text-to-image generation, image-to-image transformations, and freehand drawing-based inputs with stylized output options.
 ---
 ## Setup
@@ -107,20 +107,11 @@ environment:
 - Create a queue system for handling concurrent requests
 
 ### Feature Additions
-- Support for ControlNet conditioning with pose/depth/canny edges
 - Integration with additional stable diffusion models
 - Implementation of image upscaling with ESRGAN
-- User account system with generation history
-
-### Deployment Improvements
-- Kubernetes orchestration for scalable deployment
-- Monitoring and analytics dashboard
-- Resource usage optimization
-- Add support for cloud GPU providers (AWS, GCP, Azure)
 
 ### User Experience
 - Advanced prompt engineering interface
 - Preset style templates for common use cases
 - Progressive image loading during generation
-- Mobile-friendly responsive design
 ---
