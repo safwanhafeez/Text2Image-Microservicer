@@ -13,16 +13,10 @@ import text2image_pb2_grpc
 import csv
 from time import time
 
-# Add the current directory to sys.path to ensure imports work
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Set model ID
 MODEL_ID = "SG161222/Realistic_Vision_V5.1_noVAE"
 
-# Use float16 to reduce VRAM usage
 TORCH_DTYPE = torch.float16
-
-# Define negative prompt
 negative_prompt = (
     "blurry, low quality, poorly drawn hands, text, watermark, distorted face, bad anatomy, low resolution"
 )
@@ -50,6 +44,8 @@ pipe = StableDiffusionPipeline.from_pretrained(
     torch_dtype=TORCH_DTYPE,
     use_safetensors=True
 ).to("cuda")
+
+pipe.enable_vae_slicing()
 pipe.enable_attention_slicing()
 pipe.safety_checker = None
 
